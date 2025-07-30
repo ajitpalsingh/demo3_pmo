@@ -1,7 +1,8 @@
 import openai
+import streamlit as st
 
-# For OpenAI SDK >= 1.0.0
-client = openai.OpenAI()
+# Initialize OpenAI client using key from secrets
+client = openai.OpenAI(api_key=st.secrets["openai_api_key"])
 
 def prompt_engine(use_case, csv_text):
     prompt_templates = {
@@ -40,9 +41,10 @@ Data:\n{csv_text}
     }
 
     prompt = prompt_templates.get(use_case, "No prompt found.")
-    
+
     response = client.chat.completions.create(
         model="gpt-4",
         messages=[{"role": "user", "content": prompt}]
     )
+
     return response.choices[0].message.content
